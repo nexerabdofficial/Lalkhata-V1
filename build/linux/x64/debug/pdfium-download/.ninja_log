@@ -1,0 +1,21 @@
+# ninja log v7
+1	22	1789353736388266022	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-mkdir	988439fa7dd48272
+1	22	1789353736388266022	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-mkdir	988439fa7dd48272
+22	2310	1789353738673248364	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-download	642444ca67bdaaf6
+22	2310	1789353738673248364	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-download	642444ca67bdaaf6
+2310	2333	1789353738696258256	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-update	956188599480f1d1
+2310	2333	1789353738696258256	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-update	956188599480f1d1
+2333	2357	1789353738721269009	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-patch	94ccc4c8e10d7b4b
+2333	2357	1789353738721269009	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-patch	94ccc4c8e10d7b4b
+2357	2378	1789353738744278901	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-configure	60f3dd3e230047c2
+2357	2378	1789353738744278901	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-configure	60f3dd3e230047c2
+2378	2403	1789353738767288793	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-build	fc3a5996dbe22891
+2378	2403	1789353738767288793	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-build	fc3a5996dbe22891
+2403	2420	1789353738786296965	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-install	6a46376ae0951414
+2403	2420	1789353738786296965	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-install	6a46376ae0951414
+2420	2441	1789353738807305997	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-test	8d73ee707cd7978b
+2420	2441	1789353738807305997	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-test	8d73ee707cd7978b
+2442	2473	1789353738839319760	CMakeFiles/pdfium-download-complete	daa5f6758ebf319
+2442	2473	1789353738839319760	pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-done	daa5f6758ebf319
+2442	2473	1789353738839319760	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/CMakeFiles/pdfium-download-complete	daa5f6758ebf319
+2442	2473	1789353738839319760	/home/najmus-sahadad/Lalkhata_V1/build/linux/x64/debug/pdfium-download/pdfium-download-prefix/src/pdfium-download-stamp/pdfium-download-done	daa5f6758ebf319
