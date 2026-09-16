@@ -13,7 +13,7 @@ class DatabaseHelper {
   // DATABASE VERSION
   // ============================================================
 
-  static const int _databaseVersion = 35;
+  static const int _databaseVersion = 37;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -36,28 +36,18 @@ class DatabaseHelper {
     late final String databasePath;
 
     if (Platform.isWindows) {
-      final localAppData =
-          Platform.environment['LOCALAPPDATA'];
+      final localAppData = Platform.environment['LOCALAPPDATA'];
 
-      if (localAppData == null ||
-          localAppData.trim().isEmpty) {
-        throw Exception(
-          'LOCALAPPDATA environment variable is not available.',
-        );
+      if (localAppData == null || localAppData.trim().isEmpty) {
+        throw Exception('LOCALAPPDATA environment variable is not available.');
       }
 
-      databasePath = join(
-        localAppData,
-        'LalKhata',
-      );
+      databasePath = join(localAppData, 'LalKhata');
     } else {
       databasePath = await getDatabasesPath();
     }
 
-    final path = join(
-      databasePath,
-      'nexera_inventory.db',
-    );
+    final path = join(databasePath, 'nexera_inventory.db');
 
     final file = File(path);
 
@@ -66,48 +56,36 @@ class DatabaseHelper {
     }
   }
 
-Future<Database> _initDatabase() async {
-  late final String databasePath;
+  Future<Database> _initDatabase() async {
+    late final String databasePath;
 
-  if (Platform.isWindows) {
-    final localAppData =
-        Platform.environment['LOCALAPPDATA'];
+    if (Platform.isWindows) {
+      final localAppData = Platform.environment['LOCALAPPDATA'];
 
-    if (localAppData == null ||
-        localAppData.trim().isEmpty) {
-      throw Exception(
-        'LOCALAPPDATA environment variable is not available.',
-      );
+      if (localAppData == null || localAppData.trim().isEmpty) {
+        throw Exception('LOCALAPPDATA environment variable is not available.');
+      }
+
+      databasePath = join(localAppData, 'LalKhata');
+
+      final directory = Directory(databasePath);
+
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+    } else {
+      databasePath = await getDatabasesPath();
     }
 
-    databasePath = join(
-      localAppData,
-      'LalKhata',
+    final path = join(databasePath, 'nexera_inventory.db');
+
+    return await openDatabase(
+      path,
+      version: _databaseVersion,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
-
-    final directory = Directory(databasePath);
-
-    if (!await directory.exists()) {
-      await directory.create(
-        recursive: true,
-      );
-    }
-  } else {
-    databasePath = await getDatabasesPath();
   }
-
-  final path = join(
-    databasePath,
-    'nexera_inventory.db',
-  );
-
-  return await openDatabase(
-    path,
-    version: _databaseVersion,
-    onCreate: _onCreate,
-    onUpgrade: _onUpgrade,
-  );
-}
 
   // ============================================================
   // SAFE COLUMN HELPER
@@ -119,18 +97,12 @@ Future<Database> _initDatabase() async {
     String column,
     String definition,
   ) async {
-    final result = await db.rawQuery(
-      'PRAGMA table_info($table)',
-    );
+    final result = await db.rawQuery('PRAGMA table_info($table)');
 
-    final exists = result.any(
-      (row) => row['name'] == column,
-    );
+    final exists = result.any((row) => row['name'] == column);
 
     if (!exists) {
-      await db.execute(
-        'ALTER TABLE $table ADD COLUMN $column $definition',
-      );
+      await db.execute('ALTER TABLE $table ADD COLUMN $column $definition');
     }
   }
 
@@ -138,11 +110,7 @@ Future<Database> _initDatabase() async {
   // DATABASE UPGRADE
   // ============================================================
 
-  Future<void> _onUpgrade(
-    Database db,
-    int oldVersion,
-    int newVersion,
-  ) async {
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // ------------------------------------------------------------
     // VERSION 2
     // Suppliers
@@ -375,12 +343,7 @@ Future<Database> _initDatabase() async {
     // ------------------------------------------------------------
 
     if (oldVersion < 16) {
-      await _addColumnIfMissing(
-        db,
-        'purchases',
-        'account_id',
-        'INTEGER',
-      );
+      await _addColumnIfMissing(db, 'purchases', 'account_id', 'INTEGER');
 
       await _addColumnIfMissing(
         db,
@@ -417,12 +380,7 @@ Future<Database> _initDatabase() async {
     // ------------------------------------------------------------
 
     if (oldVersion < 18) {
-      await _addColumnIfMissing(
-        db,
-        'expenses',
-        'account_id',
-        'INTEGER',
-      );
+      await _addColumnIfMissing(db, 'expenses', 'account_id', 'INTEGER');
     }
 
     // ------------------------------------------------------------
@@ -501,11 +459,7 @@ Future<Database> _initDatabase() async {
           AND opening_balance = 0
           AND balance = 0
         ''',
-        whereArgs: [
-          'Cash',
-          'Bank',
-          'Mobile Banking',
-        ],
+        whereArgs: ['Cash', 'Bank', 'Mobile Banking'],
       );
     }
 
@@ -548,12 +502,7 @@ Future<Database> _initDatabase() async {
     // ------------------------------------------------------------
 
     if (oldVersion < 26) {
-      await _addColumnIfMissing(
-        db,
-        'incomes',
-        'voucher_no',
-        'TEXT',
-      );
+      await _addColumnIfMissing(db, 'incomes', 'voucher_no', 'TEXT');
     }
 
     // ------------------------------------------------------------
@@ -562,12 +511,7 @@ Future<Database> _initDatabase() async {
     // ------------------------------------------------------------
 
     if (oldVersion < 27) {
-      await _addColumnIfMissing(
-        db,
-        'expenses',
-        'voucher_no',
-        'TEXT',
-      );
+      await _addColumnIfMissing(db, 'expenses', 'voucher_no', 'TEXT');
     }
 
     // ============================================================
@@ -576,19 +520,9 @@ Future<Database> _initDatabase() async {
     // ============================================================
 
     if (oldVersion < 28) {
-      await _addColumnIfMissing(
-        db,
-        'incomes',
-        'voucher_no',
-        'TEXT',
-      );
+      await _addColumnIfMissing(db, 'incomes', 'voucher_no', 'TEXT');
 
-      await _addColumnIfMissing(
-        db,
-        'expenses',
-        'voucher_no',
-        'TEXT',
-      );
+      await _addColumnIfMissing(db, 'expenses', 'voucher_no', 'TEXT');
 
       await db.execute('''
         CREATE TABLE IF NOT EXISTS business_profile(
@@ -615,19 +549,9 @@ Future<Database> _initDatabase() async {
     // ============================================================
 
     if (oldVersion < 29) {
-      await _addColumnIfMissing(
-        db,
-        'customers',
-        'supabase_id',
-        'TEXT',
-      );
+      await _addColumnIfMissing(db, 'customers', 'supabase_id', 'TEXT');
 
-      await _addColumnIfMissing(
-        db,
-        'customers',
-        'customer_code',
-        'TEXT',
-      );
+      await _addColumnIfMissing(db, 'customers', 'customer_code', 'TEXT');
     }
 
     // ============================================================
@@ -652,10 +576,7 @@ Future<Database> _initDatabase() async {
     if (oldVersion < 31) {
       final purchases = await db.query(
         'purchases',
-        columns: [
-          'id',
-          'invoice_no',
-        ],
+        columns: ['id', 'invoice_no'],
         orderBy: 'id ASC',
       );
 
@@ -663,16 +584,12 @@ Future<Database> _initDatabase() async {
         final id = purchase['id'] as int;
         final invoiceNo = purchase['invoice_no'];
 
-        if (invoiceNo == null ||
-            invoiceNo.toString().trim().isEmpty) {
-          final voucherNo =
-              'PUR-${id.toString().padLeft(6, '0')}';
+        if (invoiceNo == null || invoiceNo.toString().trim().isEmpty) {
+          final voucherNo = 'PUR-${id.toString().padLeft(6, '0')}';
 
           await db.update(
             'purchases',
-            {
-              'invoice_no': voucherNo,
-            },
+            {'invoice_no': voucherNo},
             where: 'id = ?',
             whereArgs: [id],
           );
@@ -800,41 +717,78 @@ Future<Database> _initDatabase() async {
         'REAL NOT NULL DEFAULT 0',
       );
     }
-  // ============================================================
-// VERSION 35
-// LOAN INTEREST ACCRUAL DATE
-//
-// last_interest_date keeps track of the last date up to which
-// interest has been accrued.
-//
-// This is separate from principal and accrued_interest.
-// ============================================================
+    // ============================================================
+    // VERSION 35
+    // LOAN INTEREST ACCRUAL DATE
+    //
+    // last_interest_date keeps track of the last date up to which
+    // interest has been accrued.
+    //
+    // This is separate from principal and accrued_interest.
+    // ============================================================
 
-if (oldVersion < 35) {
-  await _addColumnIfMissing(
-    db,
-    'loans',
-    'accrued_interest',
-    'REAL NOT NULL DEFAULT 0',
-  );
+    if (oldVersion < 35) {
+      await _addColumnIfMissing(
+        db,
+        'loans',
+        'accrued_interest',
+        'REAL NOT NULL DEFAULT 0',
+      );
 
-  await _addColumnIfMissing(
-    db,
-    'loans',
-    'last_interest_date',
-    'TEXT',
-  );
-}
+      await _addColumnIfMissing(db, 'loans', 'last_interest_date', 'TEXT');
+    }
+
+    // ============================================================
+    // VERSION 36
+    // PRODUCT TYPE
+    //
+    // New products:
+    //   RAW_MATERIAL
+    //   FINISHED_PRODUCT
+    //
+    // Legacy products default to BOTH.
+    // ============================================================
+
+    if (oldVersion < 36) {
+      await _addColumnIfMissing(
+        db,
+        'products',
+        'product_type',
+        "TEXT NOT NULL DEFAULT 'BOTH'",
+      );
+    }
+
+    // ============================================================
+    // VERSION 37
+    // OPENING STOCK HISTORY
+    // ============================================================
+
+    if (oldVersion < 37) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS opening_stock_entries(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          product_id INTEGER NOT NULL,
+          quantity INTEGER NOT NULL,
+          unit_cost REAL NOT NULL,
+          total_value REAL NOT NULL,
+          opening_date TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY(product_id) REFERENCES products(id)
+        )
+      ''');
+
+      await db.execute('''
+        CREATE INDEX IF NOT EXISTS idx_opening_stock_entries_product
+        ON opening_stock_entries(product_id)
+      ''');
+    }
   }
 
   // ============================================================
   // FRESH DATABASE
   // ============================================================
 
-  Future<void> _onCreate(
-    Database db,
-    int version,
-  ) async {
+  Future<void> _onCreate(Database db, int version) async {
     // ------------------------------------------------------------
     // PRODUCTS
     // ------------------------------------------------------------
@@ -853,8 +807,32 @@ if (oldVersion < 35) {
 
         stock_value REAL NOT NULL DEFAULT 0,
 
-        unit TEXT NOT NULL DEFAULT 'PCS'
+        unit TEXT NOT NULL DEFAULT 'PCS',
+
+        product_type TEXT NOT NULL DEFAULT 'BOTH'
       )
+    ''');
+
+    // ------------------------------------------------------------
+    // OPENING STOCK ENTRIES
+    // ------------------------------------------------------------
+
+    await db.execute('''
+      CREATE TABLE opening_stock_entries(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER NOT NULL,
+        quantity INTEGER NOT NULL,
+        unit_cost REAL NOT NULL,
+        total_value REAL NOT NULL,
+        opening_date TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY(product_id) REFERENCES products(id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE INDEX idx_opening_stock_entries_product
+      ON opening_stock_entries(product_id)
     ''');
 
     // ------------------------------------------------------------
